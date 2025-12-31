@@ -16,7 +16,7 @@ class ObatController extends Controller
     {
         $obats = Obat::all()->map(function ($obat) {
             return [
-                'id' => $obat->id,
+                'obats_id' => $obat->obats_id,
                 'name' => $obat->name,
                 'description' => $obat->description,
                 'price' => $obat->price,
