@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'age',
         'address',
+        'role',
         'email',
         'password',
     ];
@@ -46,5 +47,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isCashier(): bool
+    {
+        return $this->role === 'cashier';
     }
 }
