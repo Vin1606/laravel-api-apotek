@@ -21,12 +21,19 @@ class AuthController extends Controller
             'address'  => 'nullable|string',
         ]);
 
+        // Tentukan role, jika email admin@gmail.com maka jadikan admin
+        $role = 'user';
+        if ($validatedData['email'] === 'admin@gmail.com') {
+            $role = 'admin';
+        }
+
         $user = User::create([
             'name'     => $validatedData['name'],
             'email'    => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
             'age'      => $request->age,
             'address'  => $request->address,
+            'role'     => $role,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;

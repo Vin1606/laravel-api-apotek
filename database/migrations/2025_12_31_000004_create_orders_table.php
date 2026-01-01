@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id('orders_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('users_id');
             $table->integer('total_price');
-            $table->string('shipping_address');
+            $table->string('shipping_address')->nullable();
+            $table->string('notes')->nullable();
             $table->string('payment_method');
-            $table->dateTime('paid_at');
-            $table->unsignedBigInteger('confirmation_by');
-            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
-            $table->foreign('user_id')->references('users_id')->on('users')->onDelete('cascade');
+            $table->dateTime('paid_at')->nullable();
+            $table->unsignedBigInteger('confirmation_by')->nullable();
+            $table->enum('payment_status', ['pending', 'paid', 'failed', 'cancelled'])->default('pending');
+            $table->string('image_payment')->nullable();
+            $table->foreign('users_id')->references('users_id')->on('users')->onDelete('cascade');
             $table->foreign('confirmation_by')->references('users_id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

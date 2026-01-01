@@ -52,40 +52,35 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $users_id)
     {
-        if ($id != auth()->id()) {
+        if ($users_id != auth()->id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        $user = User::find($id);
+        $user = User::find($users_id);
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        // Validasi input
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            // Email harus unik, tapi kecualikan email milik user ini sendiri
-            'email'    => 'required|email|unique:users,email,' . $id,
+        $validatedData = $request->validate([
+            'name'     => 'sometimes|required|string|max:255',
+            'email'    => 'sometimes|required|string|email|max:255',
+            'password' => 'sometimes|required|string|min:8',
             'age'      => 'nullable|integer',
             'address'  => 'nullable|string',
-            'password' => 'nullable|min:8',
         ]);
 
-        $input = $request->except(['password']);
-
-        // Jika password diisi, hash password baru
-        if ($request->filled('password')) {
-            $input['password'] = Hash::make($request->password);
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = Hash::make($validatedData['password']);
         }
 
-        $user->update($input);
+        $user->update($validatedData);
 
         return response()->json([
             'success' => true,
-            'message' => 'Profile berhasil diupdate',
+            'message' => 'User berhasil diperbarui',
             'data'    => $user
         ]);
     }
