@@ -16,7 +16,20 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::apiResource('/obat', ObatController::class);
+    
+    // Obat - Semua user bisa lihat (index & show)
+    Route::get('/obat', [ObatController::class, 'index']);
+    Route::get('/obat/{obat}', [ObatController::class, 'show']);
+    
+    // Obat - Hanya admin yang bisa create, update, delete
+    Route::middleware('admin')->group(function () {
+        Route::post('/obat', [ObatController::class, 'store']);
+        Route::put('/obat/{obat}', [ObatController::class, 'update']);
+        Route::patch('/obat/{obat}', [ObatController::class, 'update']);
+        Route::delete('/obat/{obat}', [ObatController::class, 'destroy']);
+    });
+    
+    // Profile - User hanya bisa akses profile sendiri
     Route::apiResource('/profile', UserController::class);
 });
 
