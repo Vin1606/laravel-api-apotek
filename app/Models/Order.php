@@ -34,11 +34,6 @@ class Order extends Model
         return $this->belongsTo(User::class, 'confirmation_by', 'users_id');
     }
 
-    // public function orderItems()
-    // {
-    //     return $this->hasMany(Order_Items::class, 'orders_id', 'orders_id');
-    // }
-
     public function items()
     {
         return $this->hasMany(Order_Items::class, 'orders_id', 'orders_id');
