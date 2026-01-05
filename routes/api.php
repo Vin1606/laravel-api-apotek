@@ -33,8 +33,16 @@ Route::middleware('auth:sanctum')->group(function () {
     // Profile - User hanya bisa akses profile sendiri
     Route::apiResource('/profile', UserController::class);
     Route::put('/profile/{users_id}', [UserController::class, 'update']);
+
+    // Order
     Route::get('/orders', [OrderControllerUser::class, 'index']);
     Route::apiResource('/ordersPayment', OrderControllerUser::class);
+
+    // Gemini - AI generation endpoint
+    Route::post('/gemini', [\App\Http\Controllers\Api\GeminiController::class, 'generate']);
+    Route::get('/gemini/history', [\App\Http\Controllers\Api\GeminiController::class, 'history']);
+    Route::delete('/gemini/{gemini_id}', [\App\Http\Controllers\Api\GeminiController::class, 'destroy']);
+    Route::delete('/gemini', [\App\Http\Controllers\Api\GeminiController::class, 'clearAll']);
 });
 
 // RUTE GAMBAR BNGSD
