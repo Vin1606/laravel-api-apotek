@@ -26,12 +26,9 @@ class GeminiController extends Controller
         ]);
 
         $allowedModels = [
-            "gemini-2.0-flash", 
-            "gemini-2.5-flash-lite", 
-            "gemini-2.5-flash", 
-            "gemini-2.5-pro", 
-            "gemini-3-flash-preview", 
-            "gemini-3-pro-preview"
+            "gemini-2.5-flash-lite",   //Limit 20
+            "gemini-2.5-flash",  //Limit 20
+            "gemini-3-flash-preview",  //Limit 20
         ];
 
         $requestedModel = $request->input('model');
@@ -98,7 +95,7 @@ class GeminiController extends Controller
                         if ($this->isJson($text)) {
                             $text = "[User mengirim gambar sebelumnya]";
                         }
-                        return Content::parse(part: $text, role: $role);
+                        return Content::parse($text, $role);
                     })->values()->toArray();
             }
 
@@ -125,8 +122,8 @@ class GeminiController extends Controller
                 ]);
 
                 $currentPayload[] = new Blob(
-                    mimeType: MimeType::IMAGE_JPEG,
-                    data: base64_encode(file_get_contents($file->getRealPath()))
+                    MimeType::IMAGE_JPEG,
+                    base64_encode(file_get_contents($file->getRealPath()))
                 );
             }
 
@@ -137,9 +134,9 @@ class GeminiController extends Controller
                 try {
                     Log::info("Mencoba PharmaBot dengan model: {$currentModel}");
                     
-                    $response = Gemini::generativeModel(model: $currentModel)
+                    $response = Gemini::generativeModel($currentModel)
                         ->withSystemInstruction(Content::parse($systemPrompt))
-                        ->startChat(history: $history)
+                        ->startChat($history)
                         ->sendMessage($currentPayload);
                     
                     $aiText = $response->text();
@@ -187,9 +184,9 @@ class GeminiController extends Controller
 
     private function attemptGenerate($modelName, $systemPrompt, $history, $payload)
     {
-        return Gemini::generativeModel(model: $modelName)
+        return Gemini::generativeModel($modelName)
             ->withSystemInstruction(Content::parse($systemPrompt))
-            ->startChat(history: $history)
+            ->startChat($history)
             ->sendMessage($payload);
     }
 
