@@ -28,7 +28,8 @@ class GeminiController extends Controller
         $allowedModels = [
             "gemini-2.5-flash-lite",   //Limit 20
             "gemini-2.5-flash",  //Limit 20
-            "gemini-3-flash-preview",  //Limit 20
+            "gemini-3-flash-preview",
+            "gemini-2.5-flash-lite-preview-09-2025",
         ];
 
         $requestedModel = $request->input('model');
